@@ -15,6 +15,7 @@
     "serve-favicon": "~2.2.0",
     "mongodb": "1.4",
     "mongoskin": "*",
-    "node-schedule": "*"
+    "node-schedule": "*",
+    "nodemailer" : "*"
   }
 }
