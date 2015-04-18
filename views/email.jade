@@ -1,0 +1,16 @@
+extends layout
+
+block content
+    h1 Add Email
+    h2 Add User
+
+    input#subject(type='text', placeholder='Subject')
+    br
+    textarea#text(type='text', placeholder='Email Text')
+    br
+    textarea#html(type='text', placeholder='Email HTML')
+    br
+    button#addEmailBtn Submit Email
+
+block scripts
+    script(src='/javascripts/emailSubmit.js')
