@@ -1,5 +1,27 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to #{title}
+  h2 Current Emails
+  p.lead These emails have been sent out and are waiting to be confirmed by everyone. Click on one to see more info. Date shown is last day.
+  #loading
+   strong Loading...
+  #accordion.panel-group(role='tablist', aria-multiselectable='true')
+      #template.panel.panel-default(style="display:none")
+          #headingOne.panel-heading(role='tab')
+            h4.panel-title
+              a.accordion-toggle(data-toggle='collapse', data-parent='#accordion', href='#collapseOne', aria-expanded='true', aria-controls='collapseOne')
+                | Subject: [SigEp Rush] Remember your event
+              p.panel-date(style="float:right") Date
+          #collapseOne.panel-collapse.collapse.in(role='tabpanel', aria-labelledby='headingOne')
+            .panel-body
+                h5 Email text:
+                .email-text
+                    | Email text
+                h5 Users Confirmed:
+                .users-confirmed
+                    | Users Confirmed
+
+block scripts
+    script(src='/javascripts/main.js')
+
+

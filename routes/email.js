@@ -7,6 +7,23 @@ router.get('/', function(req, res, next) {
   res.render('email', {  });
 });
 
+/*
+* Get all the emails, hide some properties and send response
+*
+*/
+router.get('/getAll', function(req,res){
+    console.log("Getting all emails");
+    var db = req.db;
+    var emails = [];
+    db.collection('emails').find().toArray(function (err, items) {
+        //items = list of email objects
+        for (i in items){
+            //items[i]['id'] = "secret",
+            items[i]['usersConfirmed'] = ['secret'];
+        }
+        res.json(items);
+    });
+})
 
 
 
@@ -22,6 +39,7 @@ router.post('/new', function(req, res, next) {
     //Add email to db
     var newEmail = req.body;
     newEmail['usersConfirmed'] = [];
+    newEmail['usersConfirmedNames'] = [];
     newEmail['lastDay'] = new Date(newEmail.date);
 
     console.log(newEmail);

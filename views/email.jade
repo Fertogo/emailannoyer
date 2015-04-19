@@ -1,18 +1,18 @@
 extends layout
 
 block content
-    h1 Add Email
-    h2 Add User
-
-    input#subject(type='text', placeholder='Subject')
-    br
-    textarea#text(type='text', placeholder='Email Text')
-    br
-    textarea#html(type='text', placeholder='Email HTML')
-    br
-    input#date(type="date")
-    br
-    button#addEmailBtn Submit Email
+    h1 New Email
+    p.lead This will send an email to everyone.
+    .form-group
+        input#subject.form-control(type='text', placeholder='Subject')
+        br
+        textarea#text.form-control(type='text', placeholder='Email Text' style="height:150px")
+        br
+        textarea#html.form-control(type='text', placeholder='Email HTML' style="height:150px")
+        br
+        input#date.form-control(type="date", style="width:50%")
+        br
+        button#addEmailBtn.btn.btn-default Submit Email
 
 block scripts
     script(src='/javascripts/emailSubmit.js')

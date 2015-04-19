@@ -34,10 +34,15 @@ router.get('/confirmEmail/:userid/:emailid', function(req, res) {
                 if (!err && result){ //Email found
                     var email = result;
                     var users = email.usersConfirmed;
+                    var usersConfirmedNames = email.usersConfirmedNames;
 
-                    if (users.indexOf(user.id) < 0) users.push(user.id);
+                    if (users.indexOf(user.id) < 0){
+                        users.push(user.id);
+                        usersConfirmedNames.push(user.fullname);
+                    }
 
-                    db.collection('emails').update({id:email.id}, {$set:{usersConfirmed:users}}, function(err, result) {
+
+                    db.collection('emails').update({id:email.id}, {$set:{usersConfirmed:users, usersConfirmedNames: usersConfirmedNames}}, function(err, result) {
                         if (!err && result) {
                             console.log('updated!');
                             emailConfirmed = true;
