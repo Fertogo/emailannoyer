@@ -58,13 +58,13 @@ function scheduleEmail(email, db){
 
     if (daysLeft < 0 ) return ;//Email is done
     //How often to send emails depending on daysLeft
-    else if (daysLeft > 30) nextDay.setDays(today.getDays() + 7);
-    else if (daysLeft > 14) nextDay.setDays(today.getDays() + 3);
-    else if (daysLeft > 7) nextDay.setDays(today.getDays() + 1);
-    else if (daysLeft > 5) nextDay.setDays(today.getDays() + 0.5);
-    else nextDay.setHours(today.getHours() + 1);
+    // else if (daysLeft > 30) nextDay.setDays(today.getDays() + 7);
+    // else if (daysLeft > 14) nextDay.setDays(today.getDays() + 3);
+    // else if (daysLeft > 7) nextDay.setDays(today.getDays() + 1);
+    // else if (daysLeft > 5) nextDay.setDays(today.getDays() + 0.5);
+    // else nextDay.setHours(today.getHours() + 1);
 
-    //nextDay.setSeconds(today.getSeconds() + 30); //send every 30 seconds
+    nextDay.setSeconds(today.getSeconds() + 15); //send every 30 seconds
 
     //Schedule an email for the next day
     var j = schedule.scheduleJob(nextDay,function(){
@@ -120,10 +120,10 @@ function sendEmail(email, reciever){
 
     // create reusable transporter object using SMTP transport
     var transporter = nodemailer.createTransport({
-        service: 'Gmail',
+        service: 'Mailgun',
         auth: {
-            user: 'sentimentalprinceton@gmail.com',
-            pass: 'hack123hack'
+            user: process.env.MAILGUN_USERNAME,
+            pass: process.env.MAILGUN_PASSWORD
         }
     });
 
