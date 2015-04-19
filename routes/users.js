@@ -1,10 +1,14 @@
 var express = require('express');
 var router = express.Router();
 
+var basicAuth = require('basic-auth-connect');
+
+var auth = basicAuth('admin', 'pasas')
+
 /*
  * GET userlist.
  */
-router.get('/userlist', function(req, res) {
+router.get('/userlist', auth, function(req, res) {
     console.log("getting userlist")
     var db = req.db;
     db.collection('userlist').find().toArray(function (err, items) {
@@ -59,7 +63,7 @@ router.get('/confirmEmail/:userid/:emailid', function(req, res) {
                     console.log("Email not found :(")
                     res.redirect("/confirm/error");//Email not found
                 }
-            })
+            });
         }
         else {
             res.redirect("/confirm/error"); //User not found

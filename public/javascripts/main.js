@@ -3,6 +3,9 @@ $(document).ready(function(){
     //Get all emails and render info on a collapsible panel based on template
     $.get( "email/getAll", function( data ) {
         console.log(data)
+
+        if (data.length == 0) $("#loading").text("No emails yet")
+
         $.each(data, function(index, email){
             //Generate panel
             console.log(email.subject);

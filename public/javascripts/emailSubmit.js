@@ -1,7 +1,7 @@
 $(document).ready(function(){
     $("#addEmailBtn").click(function(){
 
-        console.log("button click")
+        console.log("button click");
         var email = {
             'subject': $("#subject").val(),
             'text' : $("#text").val(),
@@ -12,16 +12,24 @@ $(document).ready(function(){
         };
 
 
-        console.log(email)
+        console.log(email);
         $.ajax({
           method: "POST",
           url: "/email/new",
           dataType: 'JSON',
           data: email,
-          success: function() {alert("Email Added")}
-        })
+          complete: function(msg) {
+            console.log(msg.responseText);
+            if (msg.responseText=="success") {
+                alert("Emaill Added");
+                window.location.href = "/";
+            }
+            else {
+                alert("Error");
+            }
+          }
+        });
 
-        //TODO Clear FORM
     });
 
 

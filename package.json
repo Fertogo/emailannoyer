@@ -16,6 +16,7 @@
     "mongodb": "1.4",
     "mongoskin": "*",
     "node-schedule": "*",
-    "nodemailer" : "*"
+    "nodemailer" : "*",
+    "basic-auth-connect": "*"
   }
 }

@@ -1,6 +1,8 @@
 var express = require('express');
 var router = express.Router();
+var basicAuth = require('basic-auth-connect');
 
+var auth = basicAuth('admin', 'pass')
 /* GET add email page. */
 router.get('/', function(req, res, next) {
     console.log("ADD EMAIL FORM ")
@@ -23,7 +25,7 @@ router.get('/getAll', function(req,res){
         }
         res.json(items);
     });
-})
+});
 
 
 
@@ -32,8 +34,9 @@ router.get('/getAll', function(req,res){
 * Add email to db
 * Schedule jobs several jobs until deadline
 */
-router.post('/new', function(req, res, next) {
+router.post('/new', auth, function(req, res, next) {
     console.log("Hi therea");
+
    // console.log(req.body)
 
     //Add email to db
@@ -47,11 +50,18 @@ router.post('/new', function(req, res, next) {
     var db = req.db;
     var emails = db.collection('emails');
     emails.insert(newEmail, function(err,doc){
-        if (err) console.log("There was an error with the db");
-        else console.log("Email added to db");
+        if (err) {
+            console.log("There was an error with the db");
+            res.send("DB Error")
+        }
+        else {
+            res.send("success")
+            console.log("Email added to db");
+        }
 
-        scheduleEmail(newEmail, db);
-    });
+       scheduleEmail(newEmail, db);
+
+    }).bind(res);
 
 });
 
