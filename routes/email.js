@@ -87,8 +87,8 @@ function scheduleEmail(email, db){
     if (daysLeft < 0 ) return ;//Email is done
     //How often to send emails depending on daysLeft
     else if (daysLeft > 30) nextDay.setHours(today.getHours() + (7 * 24));
-    else if (daysLeft > 14) nextDay.setHours(today.getHours() + (3 * 24);
-    else if (daysLeft > 7) nextDay.setHours(today.getHours() + (1 * 24 );
+    else if (daysLeft > 14) nextDay.setHours(today.getHours() + (3 * 24));
+    else if (daysLeft > 7) nextDay.setHours(today.getHours() + (1 * 24));
     else if (daysLeft > 5) nextDay.setHours(today.getHours() + 12);
     else nextDay.setHours(today.getHours() + 1);
 
