@@ -20,13 +20,24 @@ router.get('/getAll', function(req,res){
     db.collection('emails').find().toArray(function (err, items) {
         //items = list of email objects
         for (i in items){
-            //items[i]['id'] = "secret",
+            items[i]['id'] = "secret",
             items[i]['usersConfirmed'] = ['secret'];
         }
         res.json(items);
     });
 });
 
+router.get('/resend/:id/:attempts', function(req,res){
+    var db = req.db;
+    var id = req.params.id;
+    var attempts = req.params.attempts;
+    db.collection('emails').findOne({id:id}, function(err,result){
+        if (result && !err) {
+            scheduleEmail(result,db,attempts);
+            res.redirect("/");
+        }
+    })
+})
 
 
 /*
@@ -59,7 +70,7 @@ router.post('/new', auth, function(req, res, next) {
             console.log("Email added to db");
         }
 
-       scheduleEmail(newEmail, db);
+       scheduleEmail(newEmail, db, 1);
 
     }).bind(res);
 
@@ -68,8 +79,8 @@ router.post('/new', auth, function(req, res, next) {
 /*
 * Sends an email and schedules the next one
 */
-function scheduleEmail(email, db){
-    sendEmailtoUnconfirmed(email, db);
+function scheduleEmail(email, db, attempts){
+    sendEmailtoUnconfirmed(email, db, attempts);
 
     console.log("Scheduling email");
 
@@ -86,21 +97,23 @@ function scheduleEmail(email, db){
 
     if (daysLeft < 0 ) return ;//Email is done
     //How often to send emails depending on daysLeft
-    else if (daysLeft > 30) nextDay.setHours(today.getHours() + (7 * 24));
-    else if (daysLeft > 14) nextDay.setHours(today.getHours() + (3 * 24));
-    else if (daysLeft > 7) nextDay.setHours(today.getHours() + (1 * 24));
-    else if (daysLeft > 5) nextDay.setHours(today.getHours() + 12);
-    else nextDay.setHours(today.getHours() + 1);
+    else if (daysLeft >= 30) nextDay.setHours(today.getHours() + (7 * 24));
+    else if (daysLeft >= 14) nextDay.setHours(today.getHours() + (3 * 24));
+    else if (daysLeft >= 7) nextDay.setHours(today.getHours() + (1 * 24));
+    else if (daysLeft >= 5) nextDay.setHours(today.getHours() + 12);
+    else if (daysLeft >= 3) nextDay.setHours(today.getHours() + 6);
+    else if (daysLeft >= 2) nextDay.setHours(today.getHours() + 1);
+    else if (daysLeft >= 1) nextDay.setHours(today.getHours() + .5);
+    else nextDay.setHours(today.getHours() + .1);
 
     //nextDay.setSeconds(today.getSeconds() + 15); //send every 30 seconds
 
     //Schedule an email for the next day
     var j = schedule.scheduleJob(nextDay,function(){
-        scheduleEmail(email,db);
-    });
+        attempts += 1;
+        scheduleEmail(email,db, attempts);
+    }.bind(attempts));
     console.log("Next email scheduled for:" + nextDay.toDateString());
-
-
 }
 
 /*
@@ -109,7 +122,7 @@ function scheduleEmail(email, db){
 *
 */
 
-function sendEmailtoUnconfirmed(email, db){
+function sendEmailtoUnconfirmed(email, db, attempts){
     console.log("Sending email");
     //Get email from the db
     db.collection('emails').findOne({id: email.id}, function(err, result){
@@ -124,7 +137,7 @@ function sendEmailtoUnconfirmed(email, db){
                     for (var i in users){
                         //console.log(users[i].name);
                         if (usersConfirmed.indexOf(users[i].id) < 0){ //user is not confirmed
-                            sendEmail(email, users[i]);
+                            sendEmail(email, users[i], attempts);
                         }
                         else console.log(users[i].name + " already confirmed!");
                     }
@@ -140,9 +153,9 @@ function sendEmailtoUnconfirmed(email, db){
 }
 
 // Sends the email to the reciever
-function sendEmail(email, reciever){
+function sendEmail(email, reciever, attempts){
     console.log("Sending Email to " + reciever.name);
-    var confirmURL = 'http://localhost:3000/users/confirmEmail/'+reciever.id+'/'+email.id;
+    var confirmURL = 'http://emailannoyer.fernandotrujano.com/users/confirmEmail/'+reciever.id+'/'+email.id;
 
     var nodemailer = require('nodemailer');
 
@@ -159,7 +172,7 @@ function sendEmail(email, reciever){
     var mailOptions = {
         from: 'Email Annoyer ✔ <email@annoyer.com>', // sender address
         to: reciever.email, // list of receivers
-        subject: email.subject, // Subject line
+        subject: email.subject + " #"+attempts, // Subject line
         text: email.text.replace(/##NAME##/g, reciever.name).replace(/##CONFIRM##/g, confirmURL), // plaintext body
         html: email.html.replace(/##NAME##/g, reciever.name).replace(/##CONFIRM##/g, confirmURL) // html body
     };
