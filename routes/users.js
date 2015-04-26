@@ -3,7 +3,7 @@ var router = express.Router();
 
 var basicAuth = require('basic-auth-connect');
 
-var auth = basicAuth('admin', 'pasas')
+var auth = basicAuth('admin', 'annoyingPass')
 
 /*
  * GET userlist.

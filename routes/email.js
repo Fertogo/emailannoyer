@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 var basicAuth = require('basic-auth-connect');
 
-var auth = basicAuth('admin', 'pass')
+var auth = basicAuth('admin', 'annoyingPass')
 /* GET add email page. */
 router.get('/', function(req, res, next) {
     console.log("ADD EMAIL FORM ")
@@ -20,7 +20,7 @@ router.get('/getAll', function(req,res){
     db.collection('emails').find().toArray(function (err, items) {
         //items = list of email objects
         for (i in items){
-            items[i]['id'] = "secret",
+            items[i]['id'] = Math.random().toString(36).substring(7), //Use a different id to keep real id's secret
             items[i]['usersConfirmed'] = ['secret'];
         }
         res.json(items);
