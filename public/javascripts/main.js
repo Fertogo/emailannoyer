@@ -21,18 +21,29 @@ $(document).ready(function(){
                          .removeClass("in");
 
             var usersConfirmed = ""
-            $.each(email.usersConfirmedNames, function(index, user){
-                usersConfirmed +=  user + "</br>"
-            });
-            if (email.usersConfirmedNames.length === 0) usersConfirmed = "none"
+            var usersNotConfirmed = "";
 
-            newPanel.find(".email-text").text(email.text);
-            newPanel.find(".users-confirmed").html(usersConfirmed);
 
-            newPanel.find(".panel-date").text(new Date(email.lastDay).toDateString())
+            $.get("users/getAllNames", function(allNames) {
+                $.each(email.usersConfirmedNames, function(index, user){
+                    usersConfirmed +=  user + "</br>";
+                    allNames.splice(allNames.indexOf(user),1) //Remove all confirmed users
+                });
+                $.each(allNames, function(index, user){
+                    usersNotConfirmed += user + "</br>";
+                });
+                if (email.usersConfirmedNames.length === 0) usersConfirmed = "none";
+                if (allNames.length === 0) usersNotConfirmed = "none!"; //Everyone confirmed!
+                newPanel.find(".email-text").html(email.html);
+                newPanel.find(".users-confirmed-text").html(usersConfirmed);
+                newPanel.find(".users-not-confirmed-text").html(usersNotConfirmed);
 
-            $("#loading").hide();
-            $("#accordion").append(newPanel.fadeIn());
+                newPanel.find(".panel-date").text(new Date(email.lastDay).toDateString())
+
+                $("#loading").hide();
+                $("#accordion").append(newPanel.fadeIn());
+
+            })
         })
     });
 

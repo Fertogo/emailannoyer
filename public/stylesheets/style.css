@@ -6,3 +6,13 @@ body {
 a {
   color: #00B7FF;
 }
+
+.users-confirmed {
+    width: 50%;
+    float: left;
+}
+
+.users-not-confirmed{
+    width: 50%;
+    float: right;
+}

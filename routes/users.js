@@ -17,6 +17,20 @@ router.get('/userlist', auth, function(req, res) {
     });
 });
 
+router.get('/getAllNames', function(req, res){
+    console.log("getting all names");
+    var names = [];
+    var db = req.db;
+    db.collection('userlist').find().toArray(function(err, users){
+        for (var i in users){
+            names.push(users[i].fullname);
+        }
+        res.json(names);
+
+    })
+
+})
+
 /*
  * Confirm an Email
  * Given a user id and an emailid, checks that both are valid and then adds the user id to confirmedUsers field of email
