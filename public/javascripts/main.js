@@ -27,7 +27,9 @@ $(document).ready(function(){
             $.get("users/getAllNames", function(allNames) {
                 $.each(email.usersConfirmedNames, function(index, user){
                     usersConfirmed +=  user + "</br>";
-                    allNames.splice(allNames.indexOf(user),1) //Remove all confirmed users
+                    if (allNames.indexOf(user) !== -1){
+                        allNames.splice(allNames.indexOf(user),1) //Remove all confirmed users
+                    }
                 });
                 $.each(allNames, function(index, user){
                     usersNotConfirmed += user + "</br>";
