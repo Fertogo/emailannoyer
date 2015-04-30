@@ -33,7 +33,7 @@ router.get('/resend/:id/:attempts', function(req,res){
     var attempts = req.params.attempts;
     db.collection('emails').findOne({id:id}, function(err,result){
         if (result && !err) {
-            scheduleEmail(result,db,attempts);
+            scheduleEmail(result,db,parseInt(attempts));
             res.redirect("/");
         }
     })

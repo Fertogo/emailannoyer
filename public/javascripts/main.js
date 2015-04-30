@@ -6,25 +6,25 @@ $(document).ready(function(){
 
         if (data.length == 0) $("#loading").text("No emails yet")
 
-        $.each(data, function(index, email){
-            //Generate panel
-            console.log(email.subject);
-            var newPanel = $("#template").clone();
-            // $("#template").remove();
-            newPanel.css('display','inherit');
-            newPanel.find(".accordion-toggle")
-                        .attr("href",  "#" + email.id)
-                        .text(email.subject);
-            newPanel.find(".panel-collapse")
-                         .attr("id", email.id)
-                         .addClass("collapse")
-                         .removeClass("in");
+        $.get("users/getAllNames", function(allUsers) {
+            $.each(data, function(index, email){ //For each email
+                var allNames = allUsers;
+                //Generate panel
+                console.log(email.subject);
+                var newPanel = $("#template").clone();
+                // $("#template").remove();
+                newPanel.css('display','inherit');
+                newPanel.find(".accordion-toggle")
+                            .attr("href",  "#" + email.id)
+                            .text(email.subject);
+                newPanel.find(".panel-collapse")
+                             .attr("id", email.id)
+                             .addClass("collapse")
+                             .removeClass("in");
 
-            var usersConfirmed = ""
-            var usersNotConfirmed = "";
+                var usersConfirmed = "";
+                var usersNotConfirmed = "";
 
-
-            $.get("users/getAllNames", function(allNames) {
                 $.each(email.usersConfirmedNames, function(index, user){
                     usersConfirmed +=  user + "</br>";
                     if (allNames.indexOf(user) !== -1){
@@ -44,9 +44,9 @@ $(document).ready(function(){
 
                 $("#loading").hide();
                 $("#accordion").append(newPanel.fadeIn());
+            });
+        });
 
-            })
-        })
     });
 
 })
