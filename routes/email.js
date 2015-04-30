@@ -103,8 +103,8 @@ function scheduleEmail(email, db, attempts){
     else if (daysLeft >= 5) nextDay.setHours(today.getHours() + 12);
     else if (daysLeft >= 3) nextDay.setHours(today.getHours() + 6);
     else if (daysLeft >= 2) nextDay.setHours(today.getHours() + 1);
-    else if (daysLeft >= 1) nextDay.setHours(today.getHours() + .5);
-    else nextDay.setHours(today.getHours() + .1);
+    else if (daysLeft >= 1) nextDay.setMinutes(today.getMinutes() + 30);
+    else nextDay.setMinutes(today.getMinutes() + 5);
 
     //nextDay.setSeconds(today.getSeconds() + 15); //send every 30 seconds
 
