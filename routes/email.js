@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 var basicAuth = require('basic-auth-connect');
 
-var auth = basicAuth('admin', 'annoyingPass')
+var auth = basicAuth('admin', process.env.ADMIN_PASS);
 /* GET add email page. */
 router.get('/', function(req, res, next) {
     console.log("ADD EMAIL FORM ")
